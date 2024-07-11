@@ -1,11 +1,13 @@
-"use client"
+"use client";
 
 import { useState } from "react";
+import { useRouter }  from "next/navigation";
 
 export default function Home() {
   const [base64String, setBase64String] = useState("");
   const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleFileInputChange = (event: any) => {
     const file = event.target.files[0];
@@ -39,9 +41,6 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-24">
-    {/* Loading indicator */}
-    {isLoading && <p className="py-4"> Loading... </p>}
-
 
     {/* Input field */}
     {!base64String && (
@@ -55,7 +54,7 @@ export default function Home() {
       </div>
     )}
 
-    {/* Image input button */}
+    {/* Display image uploaded */}
     {base64String &&  (
       <>
         <div className="mb-5">
@@ -64,7 +63,7 @@ export default function Home() {
       </>
     )}
 
-    {/* Description button */}
+    {/* Generate description button */}
     {!description && (
       <button
         className="bg-blue-500 w-30 p-2 text-white rounded shadow-x1 disabled:bg-blue-500/20"
@@ -75,15 +74,27 @@ export default function Home() {
       </button>
     )}
 
+    {/* Loading indicator */}
+    {isLoading && <p className="py-4"> Loading... </p>}
+
     {/* Display description */}
     {description && (
-      <div>
+      <div className="place-items-center">
         <p className="font-bold"> Description </p>
         <p> {description} </p>
+        <div className="text-center p-8">
+          <button
+            className="bg-blue-500 w-30 p-2 text-white rounded shadow-x1 disabled:bg-blue-500/20"
+            onClick={() => router.push(`/text-generation?desc=${encodeURIComponent(description)}`)}
+          >
+            Send to Text Generation
+          </button>
+        </div>
       </div>
     )}
 
 
     </div>
   );
-};
+}
+
