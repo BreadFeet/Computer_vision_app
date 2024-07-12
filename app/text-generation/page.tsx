@@ -3,9 +3,11 @@
 import { useSearchParams } from "next/navigation";
 import { useChat } from "ai/react";
 import { useEffect, useRef }  from "react";
+import { useRouter } from "next/navigation";
 
 export default function Description() {
   const { messages, isLoading, append, input, handleSubmit, handleInputChange} = useChat();
+  const router = useRouter();
 
   // To get pushed parameter from computer-vision
   const searchParams = useSearchParams();
@@ -20,10 +22,16 @@ export default function Description() {
     }
   }, [messages]);
 
+  const handleNavigate = () => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("lastMessage", JSON.stringify(messages[messages.length - 1].content));
+      router.push("/stable-diffusion");
+    }
+  };
 
   return (
-    <div className="flex flex-col w-full h-screen max-w-md py-24 mx-auto stretch">
-      <div className="overflow-auto mb-8 w-full"  ref={messagesContainerRef}>
+    <div className="flex flex-col w-full max-w-md h-screen py-24 mx-auto stretch">
+      <div className="overflow-auto mb-20 w-full"  ref={messagesContainerRef}>
         {messages.map(m => (
           <div
             key={m.id}
@@ -60,19 +68,27 @@ export default function Description() {
         )}
 
         {messages.length > 0 && (
-          <form onSubmit={handleSubmit} className="flex justify-center">
-           <input
-             className="w-[95%]  p-2 mb-8 border border-gray-300 rounded shadow-x1 text-black"
-             disabled={isLoading}
-             value={input}
-             placeholder="Chat with the AI"
-             onChange={handleInputChange}
-           />
-          </form>
+          <div className="text-center py-8">
+            <form onSubmit={handleSubmit} className="flex justify-center">
+             <input
+               className="w-[95%]  p-2 mb-8 border border-gray-300 rounded shadow-x1 text-black"
+               disabled={isLoading}
+               value={input}
+               placeholder="Chat with the AI"
+               onChange={handleInputChange}
+             />
+            </form>
+
+
+            <button
+              className="bg-blue-500 p-2 text-white rounded shadow-x1 disabled:bg-blue-500/20"
+              onClick={handleNavigate}
+            >
+              Send to Stable Diffusion
+            </button>
+          </div>
         )}
       </div>
-
-
 
     </div>
   );
