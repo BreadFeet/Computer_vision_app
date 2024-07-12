@@ -10,14 +10,14 @@ const Navbar = () => {
           </Link>
         </li>
         <li>
-          <Link href="/stable-diffusion">
-            <p className="text-black/80"> Stable Diffusion </p>
-          </Link>
-        </li>
-        <li>
          <Link href="/text-generation">
            <p className="text-black/80"> Text Generation </p>
          </Link>
+        </li>
+        <li>
+          <Link href="/stable-diffusion">
+            <p className="text-black/80"> Stable Diffusion </p>
+          </Link>
         </li>
       </ul>
     </nav>
